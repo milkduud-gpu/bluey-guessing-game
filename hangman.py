@@ -1,6 +1,5 @@
 import os
 import random
-import time
 
 WORDS = [
     "python", "hangman", "computer", "keyboard", "program", "variable",
@@ -22,7 +21,6 @@ BANNER = f"""{MAGENTA}{BOLD}
   ║  {YELLOW}★{CYAN} H A N G M A N   P A R T Y {YELLOW}★{MAGENTA}  ║
   ╚═══════════════════════════════════╝{RESET}"""
 
-# Each stage: (head, body, legs) pieces drawn progressively
 FACES = ["", "(^o^)", "(o_o)", "(O_O)", "(>_<)", "(;_;)", "(x_x)"]
 MAX_WRONG = len(FACES) - 1
 
