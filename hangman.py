@@ -1,4 +1,6 @@
+import os
 import random
+import time
 
 WORDS = [
     "python", "hangman", "computer", "keyboard", "program", "variable",
@@ -6,103 +8,104 @@ WORDS = [
     "internet", "terminal", "developer", "compile", "library", "package",
 ]
 
-STAGES = [
-    """
-  +---+
-  |   |
-      |
-      |
-      |
-      |
-=========""",
-    """
-  +---+
-  |   |
-  O   |
-      |
-      |
-      |
-=========""",
-    """
-  +---+
-  |   |
-  O   |
-  |   |
-      |
-      |
-=========""",
-    """
-  +---+
-  |   |
-  O   |
- /|   |
-      |
-      |
-=========""",
-    """
-  +---+
-  |   |
-  O   |
- /|\\  |
-      |
-      |
-=========""",
-    """
-  +---+
-  |   |
-  O   |
- /|\\  |
- /    |
-      |
-=========""",
-    """
-  +---+
-  |   |
-  O   |
- /|\\  |
- / \\  |
-      |
-=========""",
-]
+RESET = "\033[0m"
+BOLD = "\033[1m"
+RED = "\033[91m"
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+BLUE = "\033[94m"
+MAGENTA = "\033[95m"
+CYAN = "\033[96m"
 
-MAX_WRONG = len(STAGES) - 1
+BANNER = f"""{MAGENTA}{BOLD}
+  ╔═══════════════════════════════════╗
+  ║  {YELLOW}★{CYAN} H A N G M A N   P A R T Y {YELLOW}★{MAGENTA}  ║
+  ╚═══════════════════════════════════╝{RESET}"""
+
+# Each stage: (head, body, legs) pieces drawn progressively
+FACES = ["", "(^o^)", "(o_o)", "(O_O)", "(>_<)", "(;_;)", "(x_x)"]
+MAX_WRONG = len(FACES) - 1
+
+
+def draw(wrong):
+    head = FACES[wrong] if wrong >= 1 else "     "
+    arms_l = "\\" if wrong >= 3 else " "
+    arms_r = "/" if wrong >= 4 else " "
+    body = "|" if wrong >= 2 else " "
+    leg_l = "/" if wrong >= 5 else " "
+    leg_r = "\\" if wrong >= 6 else " "
+    color = [GREEN, GREEN, YELLOW, YELLOW, RED, RED, RED][wrong]
+    return (
+        f"{BLUE}   ┏━━━━━┓\n"
+        f"   ┃     ┃\n"
+        f"   ┃{color}  {head}{BLUE}\n"
+        f"   ┃{color}   {arms_l}{body}{arms_r}{BLUE}\n"
+        f"   ┃{color}   {leg_l} {leg_r}{BLUE}\n"
+        f" ━━┻━━━━━━━━{RESET}"
+    )
+
+
+def hearts(wrong):
+    left = MAX_WRONG - wrong
+    return "❤️ " * left + "🖤 " * wrong
+
+
+def clear():
+    os.system("cls" if os.name == "nt" else "clear")
+
+
+def screen(word, guessed, wrong, message=""):
+    clear()
+    print(BANNER)
+    print(draw(wrong))
+    shown = " ".join(
+        f"{CYAN}{BOLD}{c.upper()}{RESET}" if c in guessed else f"{YELLOW}_{RESET}"
+        for c in word
+    )
+    print(f"\n  🔤  {shown}")
+    bad = " ".join(sorted(g for g in guessed if g not in word))
+    print(f"  ❌  {RED}{bad or '-'}{RESET}")
+    print(f"  Lives: {hearts(wrong)}")
+    if message:
+        print(f"\n  {message}")
 
 
 def play():
     word = random.choice(WORDS)
     guessed = set()
     wrong = 0
+    message = f"{MAGENTA}Can you save my little buddy? 🎈{RESET}"
 
     while True:
-        display = " ".join(c if c in guessed else "_" for c in word)
-        print(STAGES[wrong])
-        print(f"\nWord: {display}")
-        print(f"Guessed: {' '.join(sorted(guessed)) or '-'}")
+        screen(word, guessed, wrong, message)
 
         if all(c in guessed for c in word):
-            print("\nYou win!")
+            print(f"\n  🎉🎉 {GREEN}{BOLD}YOU WIN! Hooray!{RESET} 🎉🎉")
             return
         if wrong >= MAX_WRONG:
-            print(f"\nYou lost. The word was '{word}'.")
+            print(f"\n  💀 {RED}{BOLD}Oh no! The word was '{word}'.{RESET} 💀")
             return
 
-        guess = input("\nGuess a letter: ").strip().lower()
+        guess = input(f"\n  {BOLD}Guess a letter ➜ {RESET}").strip().lower()
         if len(guess) != 1 or not guess.isalpha():
-            print("Enter a single letter.")
+            message = f"{YELLOW}🤔 One letter at a time, please!{RESET}"
         elif guess in guessed:
-            print("You already guessed that.")
+            message = f"{YELLOW}🔁 You already tried '{guess}'!{RESET}"
         else:
             guessed.add(guess)
-            if guess not in word:
+            if guess in word:
+                message = f"{GREEN}✨ Nice! '{guess}' is in the word!{RESET}"
+            else:
                 wrong += 1
-                print("Nope!")
+                message = f"{RED}💥 Oops! No '{guess}' here!{RESET}"
 
 
 if __name__ == "__main__":
     try:
         while True:
             play()
-            if input("\nPlay again? (y/n): ").strip().lower() != "y":
+            if input("\n  Play again? (y/n) ➜ ").strip().lower() != "y":
                 break
+        print(f"\n  {CYAN}Thanks for playing! 👋{RESET}")
     except (KeyboardInterrupt, EOFError):
-        print("\nGoodbye!")
+        print(f"\n  {CYAN}Goodbye! 👋{RESET}")
