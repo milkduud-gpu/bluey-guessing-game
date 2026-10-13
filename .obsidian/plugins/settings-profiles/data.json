@@ -1,0 +1,16 @@
+{
+  "activeProfile": {},
+  "profileUpdate": true,
+  "profileUpdateDelay": 800,
+  "uiUpdate": true,
+  "uiUpdateInterval": 1000,
+  "devices": {
+    "d141c943cc64e458f0086bef377c83176f95c9c084cd5a0873640ca27347872f": "/home/milkduud/.local/share/obsidianplugins/Profiles"
+  },
+  "statusbarInteraction": {
+    "click": "auto",
+    "ctrl_click": "none",
+    "shift_click": "none",
+    "alt_click": "none"
+  }
+}
