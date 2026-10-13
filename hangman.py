@@ -66,6 +66,7 @@ def screen(word, guessed, wrong, message=""):
     bad = " ".join(sorted(g for g in guessed if g not in word))
     print(f"  ❌  {RED}{bad or '-'}{RESET}")
     print(f"  Lives: {hearts(wrong)}")
+    print(f"  Guesses remaining: {BOLD}{MAX_WRONG - wrong}{RESET}")
     if message:
         print(f"\n  {message}")
 
@@ -79,20 +80,35 @@ def load_words(path):
     return words
 
 
+def popup(title, lines):
+    """Show a boxed message, then wait for Enter (the 'close' step)."""
+    width = max(len(title), *(len(line) for line in lines)) + 4
+    print(f"\n  {BOLD}╔{'═' * width}╗")
+    print(f"  ║{title.center(width)}║")
+    print(f"  ╠{'═' * width}╣")
+    for line in lines:
+        print(f"  ║{line.center(width)}║")
+    print(f"  ╚{'═' * width}╝{RESET}")
+    input("\n  Press Enter to close and start a new game... ")
+
+
 def play(words):
     word = random.choice(words)
     guessed = set()
     wrong = 0
-    message = f"{MAGENTA}Can you save my little buddy? 🎈{RESET}"
+    message = (
+        f"{MAGENTA}Guess the secret word one letter at a time.\n"
+        f"  You can miss {MAX_WRONG} times before my little buddy is out! 🎈{RESET}"
+    )
 
     while True:
         screen(word, guessed, wrong, message)
 
         if all(c in guessed for c in word):
-            print(f"\n  🎉🎉 {GREEN}{BOLD}YOU WIN! Hooray!{RESET} 🎉🎉")
+            popup("🎉 YOU WON! 🎉", [f"You guessed the word: {word}"])
             return
         if wrong >= MAX_WRONG:
-            print(f"\n  💀 {RED}{BOLD}Oh no! The word was '{word}'.{RESET} 💀")
+            popup("💀 YOU LOST 💀", [f"The word was: {word}"])
             return
 
         guess = input(f"\n  {BOLD}Guess a letter ➜ {RESET}").strip().lower()
@@ -121,8 +137,5 @@ if __name__ == "__main__":
     try:
         while True:
             play(words)
-            if input("\n  Play again? (y/n) ➜ ").strip().lower() != "y":
-                break
-        print(f"\n  {CYAN}Thanks for playing! 👋{RESET}")
     except (KeyboardInterrupt, EOFError):
         print(f"\n  {CYAN}Goodbye! 👋{RESET}")
