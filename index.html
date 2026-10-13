@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bluey's Number Guessing Game</title>
+<style>
+  :root {
+    --bluey: #5b9bd5;
+    --bluey-dark: #3f79b0;
+    --tan: #f0b46c;
+    --cream: #fbeccb;
+    --sky: #bfe3f7;
+    --grass: #9ed67a;
+    --ink: #24405c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    font-family: "Comic Sans MS", "Chalkboard SE", "Trebuchet MS", sans-serif;
+    color: var(--ink);
+    background: linear-gradient(var(--sky) 0 70%, var(--grass) 70% 100%);
+  }
+  main {
+    width: 100%;
+    max-width: 420px;
+    background: var(--cream);
+    border: 5px solid var(--bluey);
+    border-radius: 28px;
+    padding: 20px 24px 24px;
+    text-align: center;
+    box-shadow: 0 8px 0 var(--bluey-dark);
+  }
+  h1 { margin: 4px 0 0; font-size: 1.6rem; color: var(--bluey-dark); }
+  svg { width: 130px; height: 130px; }
+  .intro { margin: 4px 0 16px; line-height: 1.4; }
+  .row { display: flex; gap: 10px; justify-content: center; }
+  input {
+    width: 110px;
+    font: inherit;
+    font-size: 1.4rem;
+    text-align: center;
+    padding: 8px;
+    border: 4px solid var(--bluey);
+    border-radius: 16px;
+    background: #fff;
+    color: var(--ink);
+  }
+  button {
+    font: inherit;
+    font-weight: bold;
+    color: #fff;
+    background: var(--tan);
+    border: none;
+    border-bottom: 5px solid #c98a40;
+    border-radius: 16px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  button:active { transform: translateY(3px); border-bottom-width: 2px; }
+  #feedback {
+    min-height: 3em;
+    margin: 16px 0 8px;
+    font-size: 1.15rem;
+    font-weight: bold;
+  }
+  #remaining { font-size: 1.05rem; }
+  dialog {
+    border: 5px solid var(--bluey);
+    border-radius: 24px;
+    background: var(--cream);
+    color: var(--ink);
+    text-align: center;
+    padding: 24px 32px;
+    font-family: inherit;
+    max-width: 340px;
+  }
+  dialog::backdrop { background: rgba(36, 64, 92, 0.55); }
+  dialog h2 { margin: 0 0 8px; color: var(--bluey-dark); }
+</style>
+</head>
+<body>
+<main>
+  <svg viewBox="0 0 120 120" role="img" aria-label="Bluey the dog">
+    <!-- ears -->
+    <path d="M22 20 L40 52 L14 62 Z" fill="var(--bluey-dark)"/>
+    <path d="M98 20 L80 52 L106 62 Z" fill="var(--bluey-dark)"/>
+    <!-- head -->
+    <ellipse cx="60" cy="68" rx="42" ry="38" fill="var(--bluey)"/>
+    <!-- muzzle -->
+    <ellipse cx="60" cy="84" rx="26" ry="20" fill="var(--tan)"/>
+    <!-- eyes -->
+    <circle cx="44" cy="62" r="7" fill="#fff"/>
+    <circle cx="76" cy="62" r="7" fill="#fff"/>
+    <circle cx="45" cy="63" r="3.5" fill="var(--ink)"/>
+    <circle cx="75" cy="63" r="3.5" fill="var(--ink)"/>
+    <!-- nose and smile -->
+    <ellipse cx="60" cy="76" rx="7" ry="5" fill="var(--ink)"/>
+    <path d="M48 90 Q60 100 72 90" stroke="var(--ink)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>
+  <h1>Bluey's Number Guessing Game</h1>
+  <p class="intro">
+    I'm thinking of a number between <b>1</b> and <b>100</b>.<br>
+    Can you guess it in <b>5</b> tries?
+  </p>
+  <form id="form" class="row" autocomplete="off">
+    <input id="guess" type="text" inputmode="numeric" maxlength="3" aria-label="Your guess" autofocus>
+    <button type="submit">Guess!</button>
+  </form>
+  <p id="feedback" aria-live="polite"></p>
+  <p id="remaining"></p>
+</main>
+
+<dialog id="result">
+  <h2 id="result-title"></h2>
+  <p id="result-message"></p>
+  <form method="dialog"><button>Play again 🐾</button></form>
+</dialog>
+
+<script>
+  const LOW = 1, HIGH = 100, MAX_GUESSES = 5;
+  const input = document.getElementById("guess");
+  const feedback = document.getElementById("feedback");
+  const remaining = document.getElementById("remaining");
+  const result = document.getElementById("result");
+  let secret, guessesLeft;
+
+  function newGame() {
+    secret = Math.floor(Math.random() * (HIGH - LOW + 1)) + LOW;
+    guessesLeft = MAX_GUESSES;
+    feedback.textContent = "Type a number and press Guess!";
+    input.value = "";
+    showRemaining();
+    input.focus();
+  }
+
+  function showRemaining() {
+    remaining.textContent = "Guesses left: " + "🐾".repeat(guessesLeft) + " (" + guessesLeft + ")";
+  }
+
+  function endGame(title, message) {
+    document.getElementById("result-title").textContent = title;
+    document.getElementById("result-message").textContent = message;
+    result.showModal();
+  }
+
+  document.getElementById("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    input.value = "";
+    const guess = Number(text);
+    if (!/^\d+$/.test(text) || guess < LOW || guess > HIGH) {
+      feedback.textContent = "Oops! Please type a whole number from " + LOW + " to " + HIGH + ".";
+      return;
+    }
+
+    guessesLeft--;
+    showRemaining();
+
+    if (guess === secret) {
+      endGame("Wackadoo! You won! 🎉", "Yes! The number was " + secret + ".");
+    } else if (guessesLeft === 0) {
+      endGame("Oh no! You lost 😢", "You're out of guesses. The number was " + secret + ".");
+    } else if (guess < secret) {
+      feedback.textContent = guess + " is too low. Try a bigger number!";
+    } else {
+      feedback.textContent = guess + " is too high. Try a smaller number!";
+    }
+  });
+
+  // Closing the pop-up (button, Esc) starts a new game.
+  result.addEventListener("close", newGame);
+
+  newGame();
+</script>
+</body>
+</html>
