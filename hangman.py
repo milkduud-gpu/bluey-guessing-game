@@ -1,5 +1,7 @@
+import argparse
 import os
 import random
+import sys
 
 WORDS = [
     "python", "hangman", "computer", "keyboard", "program", "variable",
@@ -68,8 +70,17 @@ def screen(word, guessed, wrong, message=""):
         print(f"\n  {message}")
 
 
-def play():
-    word = random.choice(WORDS)
+def load_words(path):
+    with open(path) as f:
+        words = [w.strip().lower() for w in f]
+    words = [w for w in words if w.isalpha()]
+    if not words:
+        sys.exit(f"No usable words found in {path} (one alphabetic word per line).")
+    return words
+
+
+def play(words):
+    word = random.choice(words)
     guessed = set()
     wrong = 0
     message = f"{MAGENTA}Can you save my little buddy? 🎈{RESET}"
@@ -99,9 +110,17 @@ def play():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Play hangman against the computer.")
+    parser.add_argument("-w", "--words", metavar="FILE",
+                        help="text file with one word per line (default: built-in list)")
+    args = parser.parse_args()
+    try:
+        words = load_words(args.words) if args.words else WORDS
+    except OSError as e:
+        sys.exit(f"Could not read word list: {e}")
     try:
         while True:
-            play()
+            play(words)
             if input("\n  Play again? (y/n) ➜ ").strip().lower() != "y":
                 break
         print(f"\n  {CYAN}Thanks for playing! 👋{RESET}")
