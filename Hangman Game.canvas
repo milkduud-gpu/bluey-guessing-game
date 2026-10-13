@@ -1,0 +1,260 @@
+{
+  "nodes": [
+    {
+      "id": "root",
+      "type": "text",
+      "text": "# 🎈 Hangman Game\nSingle-player, runs in the terminal.\nGuess the computer's secret word, one letter at a time.",
+      "x": -210,
+      "y": -60,
+      "width": 420,
+      "height": 120,
+      "color": "6"
+    },
+    {
+      "id": "py",
+      "type": "text",
+      "text": "## hangman.py\nThe whole game lives in this one file.\nRun: `python3 hangman.py [--words FILE]`",
+      "x": -210,
+      "y": 165,
+      "width": 420,
+      "height": 130,
+      "color": "5"
+    },
+    {
+      "id": "claude",
+      "type": "text",
+      "text": "## CLAUDE.md\nProject rules for Claude: keep it simple, no unrequested features, single player, explain major changes first.\n⚠ Its game spec still describes the Number Guessing Game.",
+      "x": -1210,
+      "y": 155,
+      "width": 420,
+      "height": 150,
+      "color": "2"
+    },
+    {
+      "id": "words",
+      "type": "text",
+      "text": "## Word list file (optional)\nPlain text, one word per line.\nPassed with `--words FILE` / `-w`.",
+      "x": 810,
+      "y": 165,
+      "width": 380,
+      "height": 130,
+      "color": "3"
+    },
+    {
+      "id": "cfg",
+      "type": "text",
+      "text": "### Config & data\n`WORDS` – built-in word list\n`RESET/RED/GREEN…` – ANSI colors\n`BANNER` – title box\n`FACES` – 6 faces for the buddy\n`MAX_WRONG` = 6 misses allowed",
+      "x": -1160,
+      "y": 395,
+      "width": 320,
+      "height": 250,
+      "color": "4"
+    },
+    {
+      "id": "view",
+      "type": "text",
+      "text": "### Display\n`draw(wrong)` – gallows + buddy\n`hearts(wrong)` – ❤️ / 🖤 lives\n`clear()` – wipe the screen\n`screen(...)` – banner, buddy, word, wrong letters, lives, guesses remaining, message",
+      "x": -800,
+      "y": 395,
+      "width": 320,
+      "height": 250,
+      "color": "1"
+    },
+    {
+      "id": "logic",
+      "type": "text",
+      "text": "### Game logic\n`play(words)` – one full round:\npick word → show screen → read guess → update state → check win/lose.\n`popup(title, lines)` – boxed end message, waits for Enter",
+      "x": -440,
+      "y": 395,
+      "width": 320,
+      "height": 250,
+      "color": "3"
+    },
+    {
+      "id": "entry",
+      "type": "text",
+      "text": "### Entry point\n`if __name__ == \"__main__\"`\nParses `--words`, loads the list, then calls `play()` in an endless loop (auto new game).\nCtrl+C / Ctrl+D → \"Goodbye!\"",
+      "x": -80,
+      "y": 395,
+      "width": 320,
+      "height": 250,
+      "color": "6"
+    },
+    {
+      "id": "load",
+      "type": "text",
+      "text": "### Word loading\n`load_words(path)`\nLowercases each line, keeps alphabetic words only, exits with a message if the file is missing or has no usable words.",
+      "x": 280,
+      "y": 395,
+      "width": 320,
+      "height": 250,
+      "color": "2"
+    },
+    {
+      "id": "g1",
+      "type": "text",
+      "text": "**1. Validate guess**\nNot a single letter → \"One letter at a time!\"\nRepeat letter → \"Already tried\" (no penalty)",
+      "x": -940,
+      "y": 795,
+      "width": 320,
+      "height": 170,
+      "color": "1"
+    },
+    {
+      "id": "g2",
+      "type": "text",
+      "text": "**2. Hit or miss**\nIn the word → letter revealed everywhere.\nNot in word → `wrong += 1`, buddy's face and lives change.",
+      "x": -580,
+      "y": 795,
+      "width": 320,
+      "height": 170,
+      "color": "4"
+    },
+    {
+      "id": "g3",
+      "type": "text",
+      "text": "**3. Win check**\nEvery letter revealed → \"YOU WON!\" box.",
+      "x": -220,
+      "y": 795,
+      "width": 320,
+      "height": 170,
+      "color": "4"
+    },
+    {
+      "id": "g4",
+      "type": "text",
+      "text": "**4. Lose check**\n`wrong` reaches 6 → \"YOU LOST\" box shows the word.",
+      "x": 140,
+      "y": 795,
+      "width": 320,
+      "height": 170,
+      "color": "1"
+    },
+    {
+      "id": "g5",
+      "type": "text",
+      "text": "**5. Restart**\nPress Enter to close the box → `play()` starts a new round with a new word.",
+      "x": 500,
+      "y": 795,
+      "width": 320,
+      "height": 170,
+      "color": "6"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_root_py",
+      "fromNode": "root",
+      "fromSide": "bottom",
+      "toNode": "py",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_root_claude",
+      "fromNode": "root",
+      "fromSide": "bottom",
+      "toNode": "claude",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_root_words",
+      "fromNode": "root",
+      "fromSide": "bottom",
+      "toNode": "words",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_py_cfg",
+      "fromNode": "py",
+      "fromSide": "bottom",
+      "toNode": "cfg",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_py_view",
+      "fromNode": "py",
+      "fromSide": "bottom",
+      "toNode": "view",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_py_logic",
+      "fromNode": "py",
+      "fromSide": "bottom",
+      "toNode": "logic",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_py_entry",
+      "fromNode": "py",
+      "fromSide": "bottom",
+      "toNode": "entry",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_py_load",
+      "fromNode": "py",
+      "fromSide": "bottom",
+      "toNode": "load",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_words_load",
+      "fromNode": "words",
+      "fromSide": "bottom",
+      "toNode": "load",
+      "toSide": "top",
+      "toEnd": "arrow",
+      "label": "read by"
+    },
+    {
+      "id": "e_logic_g1",
+      "fromNode": "logic",
+      "fromSide": "bottom",
+      "toNode": "g1",
+      "toSide": "top",
+      "toEnd": "arrow",
+      "label": "inside play()"
+    },
+    {
+      "id": "e_logic_g2",
+      "fromNode": "logic",
+      "fromSide": "bottom",
+      "toNode": "g2",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_logic_g3",
+      "fromNode": "logic",
+      "fromSide": "bottom",
+      "toNode": "g3",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_logic_g4",
+      "fromNode": "logic",
+      "fromSide": "bottom",
+      "toNode": "g4",
+      "toSide": "top",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e_logic_g5",
+      "fromNode": "logic",
+      "fromSide": "bottom",
+      "toNode": "g5",
+      "toSide": "top",
+      "toEnd": "arrow"
+    }
+  ]
+}
