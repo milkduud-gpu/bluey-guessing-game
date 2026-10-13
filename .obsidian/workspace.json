@@ -47,7 +47,24 @@
               },
               "pinned": true,
               "icon": "terminal",
-              "title": "◑ GitHub MCP server setup"
+              "title": "◐ Hangman game against computer"
+            }
+          },
+          {
+            "id": "497befbf15a84b3c",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "Hangman Game.canvas",
+                "viewState": {
+                  "x": -10,
+                  "y": 452.5,
+                  "zoom": -0.6555157805464641
+                }
+              },
+              "icon": "lucide-layout-dashboard",
+              "title": "Hangman Game"
             }
           }
         ]
@@ -108,12 +125,11 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "b93ee4d5d9ed6bdb",
@@ -219,9 +235,20 @@
   },
   "active": "c8c9a51b4ecbc9db",
   "lastOpenFiles": [
-    "number.md",
-    "Welcome.md",
+    "Hangman Game.canvas",
+    "Untitled.canvas",
+    "CLAUDE.md",
+    "index.html",
+    "number_guess.py",
+    "number_guess.py.tmp.12353.3754e22afa27",
+    "err.txt",
+    "hangman.py.tmp.12353.422ca1c95836",
+    "hangman.py.tmp.12353.4c5f51a9f10f",
+    "hangman.py.tmp.12353.0a0f128a3179",
+    "hangman.py",
+    "hangman.py.tmp.12353.10820b2cdb99",
     "Untitled 1",
-    "Untitled"
+    "number.md",
+    "Welcome.md"
   ]
 }
