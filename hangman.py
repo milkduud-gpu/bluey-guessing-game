@@ -99,7 +99,10 @@ def play():
 
 
 if __name__ == "__main__":
-    while True:
-        play()
-        if input("\nPlay again? (y/n): ").strip().lower() != "y":
-            break
+    try:
+        while True:
+            play()
+            if input("\nPlay again? (y/n): ").strip().lower() != "y":
+                break
+    except (KeyboardInterrupt, EOFError):
+        print("\nGoodbye!")
